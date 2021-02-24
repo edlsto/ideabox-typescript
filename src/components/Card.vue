@@ -61,7 +61,6 @@ export default Vue.extend({
   },
   methods: {
     toggleDone: function(event: Event) {
-      console.log(this);
       const target = event.target as HTMLElement;
       const closest = target.closest(".item-container");
       if (closest) {
