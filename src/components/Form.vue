@@ -61,24 +61,28 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Form",
+<script lang="ts">
+import Vue from "vue";
+import { Task } from "../types/api.v1";
+
+export default Vue.extend({
+  name: "Form" as string,
   data() {
     return {
-      title: "",
-      tasks: [],
-      newTask: ""
+      title: "" as string,
+      tasks: [] as Task[],
+      newTask: "" as string,
     };
   },
   props: ["filter"],
   methods: {
     onSubmit: function() {
-      this.tasks.push({
+      const newItem: Task = {
         description: this.newTask,
         completed: false,
-        id: Date.now()
-      });
+        id: Date.now(),
+      };
+      this.tasks.push(newItem);
       this.newTask = "";
     },
     submitList: function() {
@@ -86,13 +90,14 @@ export default {
         title: this.title,
         tasks: this.tasks,
         urgent: false,
-        id: Date.now()
+        id: Date.now(),
       });
       this.title = "";
       this.tasks = [];
     },
-    deleteDraftItem: function(e) {
-      this.tasks = this.tasks.filter(item => item.id !== parseInt(e.target.id));
+    deleteDraftItem: function(e: Event) {
+      const target = e.target as HTMLElement;
+      this.tasks = this.tasks.filter((item) => item.id !== parseInt(target.id));
     },
     deleteAll: function() {
       this.tasks = [];
@@ -100,9 +105,9 @@ export default {
     },
     filterUrgent: function() {
       this.$emit("filter-urgent");
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style>

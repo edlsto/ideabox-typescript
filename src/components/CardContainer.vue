@@ -25,50 +25,64 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Card from "./Card.vue";
-export default {
+import { List } from "../types/api.v1";
+import { PropType } from "vue";
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "CardContainer",
   components: {
     Card,
   },
-  name: "CardContainer",
-  props: ["items", "filteredItems"],
+  // props: ["items", "filteredItems"],
+  props: {
+    items: {
+      type: Array as PropType<List[]>,
+      required: false,
+    },
+    filteredItems: {
+      type: Array as PropType<List[]>,
+      required: false,
+    },
+  },
+  methods: {
+    resizeGridItem(item: HTMLElement) {
+      const card = document.querySelector(".card-container");
+      const content = item.querySelector(".content");
+      if (card && content) {
+        const rowHeight = parseInt(
+          window.getComputedStyle(card).getPropertyValue("grid-auto-rows")
+        );
+        const rowGap = parseInt(
+          window.getComputedStyle(card).getPropertyValue("grid-row-gap")
+        );
+
+        const rowSpan = Math.ceil(
+          (content.getBoundingClientRect().height + rowGap + 60) /
+            (rowHeight + rowGap)
+        );
+        item.style.gridRowEnd = `span ${rowSpan}`;
+      }
+    },
+    resizeAllGridItems() {
+      const allItems: NodeListOf<HTMLDivElement> = document.querySelectorAll(
+        ".card"
+      );
+      allItems.forEach((item) => this.resizeGridItem(item));
+    },
+  },
   mounted() {
     this.resizeAllGridItems();
   },
   updated() {
     this.resizeAllGridItems();
   },
-  methods: {
-    resizeGridItem(item) {
-      const rowHeight = parseInt(
-        window
-          .getComputedStyle(document.querySelector(".card-container"))
-          .getPropertyValue("grid-auto-rows")
-      );
-      const rowGap = parseInt(
-        window
-          .getComputedStyle(document.querySelector(".card-container"))
-          .getPropertyValue("grid-row-gap")
-      );
-
-      const rowSpan = Math.ceil(
-        (item.querySelector(".content").getBoundingClientRect().height +
-          rowGap +
-          60) /
-          (rowHeight + rowGap)
-      );
-      item.style.gridRowEnd = `span ${rowSpan}`;
-    },
-    resizeAllGridItems() {
-      const allItems = document.querySelectorAll(".card");
-      allItems.forEach((item) => this.resizeGridItem(item));
-    },
-  },
-};
+});
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card-container {
   background-color: #f3f6f7;
   display: grid;

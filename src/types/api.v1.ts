@@ -1,6 +1,12 @@
 export interface List {
   title: string;
-  tasks: { description: string; completed: boolean; id: number }[];
+  tasks: Task[];
   id: number;
   urgent: boolean;
+}
+
+export interface Task {
+  description: string;
+  completed: boolean;
+  id: number;
 }

@@ -41,12 +41,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import completed from "../assets/checkbox-active.svg";
 import notCompleted from "../assets/checkbox.svg";
 import urgent from "../assets/urgent-active.svg";
 import notUrgent from "../assets/urgent.svg";
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "Card",
   props: ["title", "tasks", "id", "urgent"],
   data() {
@@ -54,24 +56,34 @@ export default {
       completedImg: completed,
       notCompletedImg: notCompleted,
       urgentImg: urgent,
-      notUrgentImg: notUrgent
+      notUrgentImg: notUrgent,
     };
   },
   methods: {
-    toggleDone: function(event) {
-      this.$emit(
-        "toggle-done",
-        parseInt(event.target.closest(".item-container").id)
-      );
+    toggleDone: function(event: Event) {
+      console.log(this);
+      const target = event.target as HTMLElement;
+      const closest = target.closest(".item-container");
+      if (closest) {
+        this.$emit("toggle-done", parseInt(closest.id));
+      }
     },
-    toggleUrgent: function(event) {
-      this.$emit("toggle-urgent", parseInt(event.target.closest(".card").id));
+    toggleUrgent: function(event: Event) {
+      const target = event.target as HTMLElement;
+      const closest = target.closest(".card");
+      if (closest) {
+        this.$emit("toggle-urgent", parseInt(closest.id));
+      }
     },
-    deleteCard: function(event) {
-      this.$emit("delete-card", parseInt(event.target.closest(".card").id));
-    }
-  }
-};
+    deleteCard: function(event: Event) {
+      const target = event.target as HTMLElement;
+      const closest = target.closest(".card");
+      if (closest) {
+        this.$emit("delete-card", parseInt(closest.id));
+      }
+    },
+  },
+});
 </script>
 
 <style>

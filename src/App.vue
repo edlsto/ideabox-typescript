@@ -32,16 +32,37 @@ export default Vue.extend({
   name: "app",
   data() {
     return {
-      items: [] as List[],
+      items: [
+        {
+          title: "go to store",
+          tasks: [
+            { description: "get some stuff", completed: false, id: 1 },
+            { description: "hello", completed: false, id: 2 },
+            { description: "hi", completed: false, id: 3 },
+          ],
+          id: 1,
+          urgent: false,
+        },
+        {
+          title: "go somewhere else",
+          tasks: [
+            { description: "get some stuff", completed: false, id: 4 },
+            { description: "hello", completed: false, id: 5 },
+            { description: "hi", completed: false, id: 6 },
+          ],
+          id: 2,
+          urgent: true,
+        },
+      ],
       filter: false,
       searchInput: "",
     };
   },
   methods: {
-    handleNewList: function(list: List) {
+    handleNewList(list: List) {
       this.items.push(list);
     },
-    toggleDone: function(id: number) {
+    toggleDone(id: number) {
       const targetItem = this.items.find((item) =>
         item.tasks.some((task) => task.id === id)
       );
@@ -53,25 +74,25 @@ export default Vue.extend({
         targetTask.completed = !targetTask.completed;
       }
     },
-    toggleUrgent: function(id: number) {
+    toggleUrgent(id: number) {
       const targetItem = this.items.find((item) => item.id === id);
       if (targetItem) {
         targetItem.urgent = !targetItem.urgent;
       }
     },
-    deleteCard: function(id: number) {
+    deleteCard(id: number) {
       this.items = this.items.filter((task) => task.id !== id);
     },
-    filterUrgent: function() {
+    filterUrgent() {
       this.filter = !this.filter;
     },
-    searchInputHandler: function(input: string) {
+    searchInputHandler(input: string) {
       this.searchInput = input;
     },
   },
 
   computed: {
-    filteredItems() {
+    filteredItems(): List[] {
       let filteredList = this.items.slice();
       if (this.searchInput) {
         filteredList = filteredList.filter((item) => {

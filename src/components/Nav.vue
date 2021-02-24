@@ -17,20 +17,22 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "Nav",
   data() {
     return {
-      search: ""
+      search: "" as string,
     };
   },
   methods: {
-    setSearch: function() {
+    setSearch: function(): void {
       this.$emit("search-input", this.search);
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style>
