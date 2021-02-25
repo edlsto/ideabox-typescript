@@ -1,17 +1,20 @@
 <template>
   <div class="wrapper">
-    <div class="no-to-do" v-if="items.length === 0">
+    <div class="no-to-do" v-if="filteredItems.length === 0">
       <h1 class="no-to-do-text">
         Add a to-do!
       </h1>
     </div>
-    <div class="no-to-do" v-if="filteredItems.length === 0 && items.length > 0">
+    <div
+      class="no-to-do"
+      v-if="filteredItems.length === 0 && filteredItems.length > 0"
+    >
       <h1 class="no-to-do-text">
         No matching lists
       </h1>
     </div>
 
-    <div class="card-container" v-if="items.length > 0">
+    <div class="card-container" v-if="filteredItems.length > 0">
       <Card
         v-for="item in filteredItems"
         v-bind:key="item.key"
@@ -28,24 +31,12 @@
 <script lang="ts">
 import Card from "./Card.vue";
 import { List } from "../types/api.v1";
-import { PropType } from "vue";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "CardContainer",
   components: {
     Card,
-  },
-  // props: ["items", "filteredItems"],
-  props: {
-    items: {
-      type: Array as PropType<List[]>,
-      required: false,
-    },
-    filteredItems: {
-      type: Array as PropType<List[]>,
-      required: false,
-    },
   },
   methods: {
     resizeGridItem(item: HTMLElement) {
@@ -71,6 +62,26 @@ export default Vue.extend({
         ".card"
       );
       allItems.forEach((item) => this.resizeGridItem(item));
+    },
+  },
+  computed: {
+    filteredItems(): List[] {
+      let filteredList = this.$store.state.items.slice();
+      if (this.$store.state.searchInput) {
+        filteredList = filteredList.filter((item: List) => {
+          const match =
+            item.title.includes(this.$store.state.searchInput) ||
+            item.tasks.some((task) => {
+              return task.description.includes(this.$store.state.searchInput);
+            });
+          return match;
+        });
+      }
+      if (this.$store.state.filter) {
+        return filteredList.filter((item: List) => item.urgent);
+      } else {
+        return filteredList;
+      }
     },
   },
   mounted() {

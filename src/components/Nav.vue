@@ -29,7 +29,7 @@ export default Vue.extend({
   },
   methods: {
     setSearch: function(): void {
-      this.$emit("search-input", this.search);
+      this.$store.commit("searchInputHandler", this.search);
     },
   },
 });

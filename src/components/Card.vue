@@ -64,21 +64,21 @@ export default Vue.extend({
       const target = event.target as HTMLElement;
       const closest = target.closest(".item-container");
       if (closest) {
-        this.$emit("toggle-done", parseInt(closest.id));
+        this.$store.commit("toggleDone", parseInt(closest.id));
       }
     },
     toggleUrgent: function(event: Event) {
       const target = event.target as HTMLElement;
       const closest = target.closest(".card");
       if (closest) {
-        this.$emit("toggle-urgent", parseInt(closest.id));
+        this.$store.commit("toggleUrgent", parseInt(closest.id));
       }
     },
     deleteCard: function(event: Event) {
       const target = event.target as HTMLElement;
       const closest = target.closest(".card");
       if (closest) {
-        this.$emit("delete-card", parseInt(closest.id));
+        this.$store.commit("deleteCard", parseInt(closest.id));
       }
     },
   },

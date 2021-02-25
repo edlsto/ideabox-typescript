@@ -86,7 +86,7 @@ export default Vue.extend({
       this.newTask = "";
     },
     submitList: function() {
-      this.$emit("add", {
+      this.$store.commit("addItem", {
         title: this.title,
         tasks: this.tasks,
         urgent: false,
@@ -104,7 +104,7 @@ export default Vue.extend({
       this.title = "";
     },
     filterUrgent: function() {
-      this.$emit("filter-urgent");
+      this.$store.commit("filterUrgent");
     },
   },
 });
